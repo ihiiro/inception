@@ -1,0 +1,31 @@
+FROM debian:bookworm
+
+RUN  apt update && apt upgrade -y \
+    && apt install -y wget lsb-release ca-certificates apt-transport-https \
+    && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
+    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
+    && apt update
+
+RUN apt install -y php8.1-fpm php8.1-mysql php8.1-mysqli mariadb-client
+
+RUN apt install -y curl
+
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
+
+RUN mkdir -p /run/php && \
+    chown -R www-data:www-data /run/php && \
+    mkdir -p /var/www/html
+
+COPY conf/www.conf /etc/php/8.1/fpm/pool.d/.
+
+COPY tools/wp-downloader.sh .
+
+RUN chmod +x wp-downloader.sh
+
+ENTRYPOINT [ "sh", "./wp-downloader.sh" ]
+
+EXPOSE 9000
+
+CMD ["php-fpm8.1", "--nodaemonize"]
