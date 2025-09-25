@@ -1,8 +1,6 @@
 FROM debian:bookworm
 
-RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y nginx openssl gettext-base \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt upgrade && apt install -y nginx openssl
 
 RUN mkdir -p /etc/nginx/ssl \
     && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -10,7 +8,7 @@ RUN mkdir -p /etc/nginx/ssl \
         -keyout /etc/nginx/ssl/yel-yaqi.key \
         -out /etc/nginx/ssl/yel-yaqi.crt
 
-COPY conf/nginx.conf /tmp/nginx.conf
-RUN envsubst '${SERVER_NAME:-${DOMAIN_NAME}}' < /tmp/nginx.conf > /etc/nginx/sites-available/default
+COPY conf/nginx.conf /etc/nginx/sites-available/default
+
 
 CMD ["nginx", "-g", "daemon off;"]
