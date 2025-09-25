@@ -1,65 +1,66 @@
-services:
-  mariadb:
-    image: "mariadb:mariadb_inception"
-    build:
-      context: ./srcs/requirements/mariadb
-    container_name: mariadb
-    volumes:
-      - mariadb_volume:/var/lib/mysql
-    networks:
-      - inception
-    expose:
-      - "3306"
-    env_file:
-      - .env
-    restart: always
+version: "3.8"
 
-  wordpress:
-    image: "wordpress:wordpress_inception"
-    build:
-      context: ./srcs/requirements/wordpress
-    container_name: wordpress
-    volumes:
-      - wordpress_volume:/var/www/html
-    depends_on:
-      - mariadb
-    networks:
-      - inception
-    expose:
-      - "9000"
-    env_file:
-      - .env
-    restart: always
-
-  nginx:
-    image: nginx:nginx_inception
-    build:
-      context: ./srcs/requirements/nginx
-    container_name: nginx
-    volumes:
-      - wordpress_volume:/var/www/html
-    depends_on:
-      - wordpress
-    networks:
-      - inception
-    ports:
-      - "443:443"
-    restart: always
+networks:
+  inception:
+    driver: bridge
 
 volumes:
   mariadb_volume:
     driver: local
     driver_opts:
-      type : none
+      type: none
       o: bind
-      device: ../home/aboulakr/data/mariadb
+      device: /home/yel-yaqi/data/mariadb
+
   wordpress_volume:
     driver: local
     driver_opts:
-      type : none
+      type: none
       o: bind
-      device: ../home/aboulakr/data/wordpress
+      device: /home/yel-yaqi/data/wordpress
 
-networks:
-  inception:
-    driver: bridge
+services:
+  mariadb:
+    build:
+      context: ./srcs/requirements/mariadb
+    image: mariadb:mariadb_inception
+    container_name: mariadb
+    restart: always
+    env_file: /home/debian/Desktop/secrets/.env
+    networks:
+      - inception
+    expose:
+      - "3306"
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+
+  wordpress:
+    build:
+      context: ./srcs/requirements/wordpress
+    image: wordpress:wordpress_inception
+    container_name: wordpress
+    restart: always
+    env_file: /home/debian/Desktop/secrets/.env
+    networks:
+      - inception
+    expose:
+      - "9000"
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress_volume:/var/www/html
+
+  nginx:
+    build:
+      context: ./srcs/requirements/nginx
+    image: nginx:nginx_inception
+    container_name: nginx
+    restart: always
+    networks:
+      - inception
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress_volume:/var/www/html

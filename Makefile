@@ -1,22 +1,21 @@
-.PHONY: all up down build clean
 
-all: up
+all: start
 
-up:
-	docker-compose -f ./docker-compose.yml --env-file .env up -d --build
+start:
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env up -d --build
 
-down:
-	docker-compose -f ./docker-compose.yml --env-file .env down
+stop:
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env down
 
-build:
-	docker-compose -f ./docker-compose.yml --env-file .env build
+rebuild:
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env build
 
-clean:
-	docker-compose -f ./docker-compose.yml --env-file .env down -v
+wipe:
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env down -v
 	docker system prune -af --volumes
 
-logs:
-	docker-compose -f ./docker-compose.yml --env-file .env logs -f
+view:
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env logs -f
 
 status:
-	docker-compose -f ./docker-compose.yml --env-file .env ps
+	docker-compose -f ./docker-compose.yml --env-file /home/debian/Desktop/secrets/.env ps

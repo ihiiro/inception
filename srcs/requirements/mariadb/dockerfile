@@ -17,4 +17,4 @@ COPY tools/mariadb-setup.sh .
 
 RUN chmod +x ./mariadb-setup.sh
 
-ENTRYPOINT [ "sh", "./mariadb-setup.sh" ]
+CMD [ "sh", "./mariadb-setup.sh" ]
