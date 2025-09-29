@@ -16,11 +16,6 @@ if [ ! -f wp-config.php ]; then
     if ! wp core install --url="$WP_URL" --title="$WP_TITLE" --admin_user="$WP_ADMIN" --admin_password="$WP_ADMIN_PASS" --admin_email="$WP_ADMIN_MAIL" --allow-root; then
         exit 1
     fi
-    echo "WordPress installation completed successfully."
-
-else
-    echo "WordPress is already installed."
-
     if wp user get "$WP_USER_GST" --allow-root; then
         echo "User '$WP_USER_GST' already exists, skipping creation."
     else
@@ -28,6 +23,7 @@ else
             exit 1
         fi
     fi
+    echo "WordPress installation completed successfully."
 fi
 
 php-fpm8.1 -F
