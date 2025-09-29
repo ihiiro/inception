@@ -30,7 +30,7 @@ services:
     networks:
       - inception
     expose:
-      - "3306"
+      - 3306
     volumes:
       - mariadb_volume:/var/lib/mysql
 
@@ -44,7 +44,7 @@ services:
     networks:
       - inception
     expose:
-      - "9000"
+      - 9000
     depends_on:
       - mariadb
     volumes:
@@ -59,7 +59,7 @@ services:
     networks:
       - inception
     ports:
-      - "443:443"
+      - 443:443
     depends_on:
       - wordpress
     volumes:

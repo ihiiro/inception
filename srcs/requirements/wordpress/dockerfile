@@ -20,6 +20,4 @@ RUN chmod +x /usr/local/bin/setup-wp.sh
 
 ENTRYPOINT ["sh", "/usr/local/bin/setup-wp.sh"]
 
-EXPOSE 9000
-
 CMD ["php-fpm8.1", "--nodaemonize"]

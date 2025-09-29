@@ -1,9 +1,8 @@
 FROM debian:bookworm
 
 
-RUN apt update && apt upgrade -y && apt install -y mariadb-server
-
-RUN mkdir -p /etc/mysql
+RUN apt update && apt upgrade -y && apt install -y mariadb-server && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
@@ -12,9 +11,6 @@ RUN chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN mkdir -p /run/mysqld /var/lib/mysql /var/log/mysql && \
     chown -R mysql:mysql /run/mysqld /var/lib/mysql /var/log/mysql
 
-COPY tools/mariadb-setup.sh .
+COPY tools/mariadb.sh .
 
-
-RUN chmod +x ./mariadb-setup.sh
-
-CMD [ "sh", "./mariadb-setup.sh" ]
+CMD [ "sh", "./mariadb.sh" ]
